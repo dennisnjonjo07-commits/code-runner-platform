@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRunner - Execute Code Instantly</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="authContainer" class="auth-container">
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form active">
+            <div class="auth-box">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>CodeRunner</h1>
+                </div>
+                <h2>Login to Your Account</h2>
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <a href="#" onclick="switchForm()">Sign Up</a></p>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-form">
+            <div class="auth-box">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>CodeRunner</h1>
+                </div>
+                <h2>Create Your Account</h2>
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" placeholder="your_username" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" placeholder="your@email.com" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" placeholder="At least 8 characters" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirm">Confirm Password</label>
+                        <input type="password" id="registerConfirm" placeholder="Confirm password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn-primary">Sign Up</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="#" onclick="switchForm()">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="appContainer" class="app-container hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-small">
+                    <i class="fas fa-code"></i>
+                    <span>CodeRunner</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span id="userEmail"></span>
+                    <button id="logoutBtn" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="nav-menu">
+                    <button class="nav-item active" data-view="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-item" data-view="editor">
+                        <i class="fas fa-edit"></i>
+                        <span>New Project</span>
+                    </button>
+                    <button class="nav-item" data-view="projects">
+                        <i class="fas fa-folder"></i>
+                        <span>My Projects</span>
+                    </button>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="btn-new-project">
+                        <i class="fas fa-plus"></i>
+                        New Project
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Dashboard View -->
+                <div id="dashboardView" class="view active">
+                    <div class="dashboard-container">
+                        <div class="welcome-section">
+                            <h1>Welcome to CodeRunner</h1>
+                            <p>Execute code in multiple languages instantly</p>
+                        </div>
+                        <div class="quick-stats">
+                            <div class="stat-card">
+                                <i class="fas fa-play-circle"></i>
+                                <h3 id="executionsCount">0</h3>
+                                <p>Executions</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-folder"></i>
+                                <h3 id="projectsCount">0</h3>
+                                <p>Projects</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>100%</h3>
+                                <p>Uptime</p>
+                            </div>
+                        </div>
+                        <div class="supported-languages">
+                            <h2>Supported Languages</h2>
+                            <div class="language-grid">
+                                <div class="lang-item" data-lang="python">
+                                    <i class="fab fa-python"></i>
+                                    <span>Python</span>
+                                </div>
+                                <div class="lang-item" data-lang="javascript">
+                                    <i class="fab fa-js"></i>
+                                    <span>JavaScript</span>
+                                </div>
+                                <div class="lang-item" data-lang="java">
+                                    <i class="fab fa-java"></i>
+                                    <span>Java</span>
+                                </div>
+                                <div class="lang-item" data-lang="ruby">
+                                    <i class="fas fa-gem"></i>
+                                    <span>Ruby</span>
+                                </div>
+                                <div class="lang-item" data-lang="rust">
+                                    <i class="fas fa-crab"></i>
+                                    <span>Rust</span>
+                                </div>
+                                <div class="lang-item" data-lang="html">
+                                    <i class="fab fa-html5"></i>
+                                    <span>HTML/CSS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editor View -->
+                <div id="editorView" class="view">
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <div class="editor-title">
+                                <input type="text" id="projectName" placeholder="Project Name" class="project-name-input">
+                            </div>
+                            <div class="editor-controls">
+                                <select id="languageSelect" class="language-select">
+                                    <option value="">Select Language</option>
+                                    <option value="python">Python</option>
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="java">Java</option>
+                                    <option value="ruby">Ruby</option>
+                                    <option value="rust">Rust</option>
+                                    <option value="html">HTML/CSS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="editor-body">
+                            <div class="upload-section">
+                                <div class="upload-options">
+                                    <div class="upload-option">
+                                        <input type="file" id="fileUpload" accept=".py,.js,.java,.rb,.rs,.html,.css" hidden>
+                                        <button class="btn-upload" onclick="document.getElementById('fileUpload').click()">
+                                            <i class="fas fa-file-upload"></i>
+                                            Upload File
+                                        </button>
+                                    </div>
+                                    <div class="upload-option">
+                                        <input type="file" id="zipUpload" accept=".zip" hidden>
+                                        <button class="btn-upload" onclick="document.getElementById('zipUpload').click()">
+                                            <i class="fas fa-file-archive"></i>
+                                            Upload ZIP
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="code-editor-section">
+                                <h3>Code Editor</h3>
+                                <textarea id="codeEditor" placeholder="Paste your code here or upload a file..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="editor-footer">
+                            <button id="runCodeBtn" class="btn-primary">
+                                <i class="fas fa-play"></i>
+                                Run Code
+                            </button>
+                            <button id="saveProjectBtn" class="btn-secondary">
+                                <i class="fas fa-save"></i>
+                                Save Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects View -->
+                <div id="projectsView" class="view">
+                    <div class="projects-container">
+                        <h2>My Projects</h2>
+                        <div id="projectsList" class="projects-list">
+                            <div class="no-projects">
+                                <i class="fas fa-folder-open"></i>
+                                <p>No projects yet. Create one to get started!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Terminal/Logs Panel -->
+        <div id="terminalPanel" class="terminal-panel hidden">
+            <div class="terminal-header">
+                <h3><i class="fas fa-terminal"></i> Execution Logs</h3>
+                <button class="btn-close-terminal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="terminal-content" id="terminalContent">
+                <div class="terminal-message welcome">Ready to execute code...</div>
+            </div>
+            <div class="terminal-footer">
+                <button id="stopExecutionBtn" class="btn-danger hidden">
+                    <i class="fas fa-stop"></i>
+                    Stop Execution
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/execution.js"></script>
+</body>
+</html>
