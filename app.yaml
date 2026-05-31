@@ -1,0 +1,10 @@
+runtime: node
+env: standard
+env_var: NODE_ENV
+value: production
+
+env_var: PORT
+value: "5000"
+
+env_var: JWT_SECRET
+value: "your_jwt_secret_change_in_production"
