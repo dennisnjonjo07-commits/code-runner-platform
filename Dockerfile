@@ -2,35 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Install system dependencies for code execution
-RUN apk add --no-cache \
-    python3 \
-    py3-pip \
-    openjdk11 \
-    ruby \
-    rust \
-    cargo \
-    bash \
-    curl
+# Install git and other dependencies
+RUN apk add --no-cache git bash python3 make g++ http-server
 
-# Copy package files
 COPY package*.json ./
+RUN npm install --production
 
-# Install Node dependencies
-RUN npm install --omit=dev
-
-# Copy application files
 COPY . .
 
-# Create upload directory
-RUN mkdir -p uploads
+# Create necessary directories
+RUN mkdir -p projects deployments uploads
 
-# Expose port
 EXPOSE 5000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:5000/api/health || exit 1
-
-# Start application
 CMD ["npm", "start"]

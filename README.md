@@ -1,320 +1,314 @@
-# CodeRunner - Multi-Language Code Execution Platform
+# 🚀 Code Hosting Platform
 
-## 🚀 Features
+A complete full-stack **code hosting and deployment platform** - All-in-one solution like Replit, Vercel, Railway, and Render combined!
 
-- **Multi-Language Support**: Execute code in Python, JavaScript, Java, Ruby, Rust, and HTML/CSS
-- **Multiple Input Methods**:
-  - Direct code editor
-  - File upload
-  - ZIP file extraction
-- **Real-Time Logging**: View execution logs and errors in real-time
-- **User Authentication**: Secure login and registration system
-- **Background Execution**: Projects run 24/7 even after logout
-- **Full-Screen UI**: Smooth, responsive interface with zero lag
-- **Project Management**: Create, save, and manage your code projects
-- **Docker Support**: Easy deployment with Docker
-- **Cloud Ready**: Deploy to Railway or Render with one click
+🏄 **Upload code → Deploy → Get live URL → Share with world**
 
-## 🚀 Quick Deploy (Recommended)
+## ✨ Key Features
 
-### Option 1: Deploy to Railway (Easiest) ⭐
-```bash
-1. Go to https://railway.app
-2. Click "New Project" → "Deploy from GitHub"
-3. Select this repository
-4. Railway auto-detects and deploys!
-5. Your app is live in 2 minutes
+### 🖥️ Integrated IDE
+- Full-screen code editor in browser
+- Multi-file project support
+- Syntax highlighting ready
+- Real-time file management
+- Upload files or paste code
+
+### 🚀 Live Deployment
+- **One-click deployment** to get live URL
+- Apps run **24/7** even when offline
+- **Auto-scaling** on Railway
+- **Subdomain routing** (projectname.yourplatform.com)
+- Real-time deployment logs
+
+### 🌍 Multi-Language Support
+- **JavaScript/Node.js** - Full server support
+- **Python** - Flask, HTTP servers
+- **HTML/CSS/JS** - Static & dynamic sites
+- **Java, Ruby, Go, C++** - Coming soon
+- **Custom entry points** supported
+
+### 📁 Project Management
+- Create unlimited projects
+- Organize by language
+- View deployment status
+- Live/Draft indicators
+- Project sharing ready
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│   Code Hosting Platform Dashboard            │
+│  (Browser-based IDE & Project Manager)       │
+└──────────────────────┬──────────────────────┘
+                       │
+       ┌───────────────┼───────────────┐
+       ▼               ▼               ▼
+   API Routes     Reverse Proxy    File Manager
+   (/api/*)       (Subdomain)      (Upload/Edit)
+       │               │               │
+       └───────────────┼───────────────┘
+                       ▼
+   ┌───────────────────────────────────────────┐
+   │   Project Management System               │
+   │  - Storage (projects/)                    │
+   │  - File Upload (multer)                   │
+   │  - Metadata Tracking                      │
+   └───────────────────────────────────────────┘
+                       │
+       ┌───────────────┼───────────────┐
+       ▼               ▼               ▼
+   Deployment     Process Manager   WebSocket
+   Engine         (Node PTY)        (Real-time)
+       │               │               │
+       └───────────────┼───────────────┘
+                       ▼
+   ┌───────────────────────────────────────────┐
+   │   Running Applications                    │
+   │  - Node.js servers on ports               │
+   │  - Python servers                         │
+   │  - Static file servers                    │
+   └───────────────────────────────────────────┘
 ```
 
-📖 See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) for detailed guide
+## 🚀 Quick Start
 
-### Option 2: Deploy to Render
+### Local Development
+
 ```bash
-1. Go to https://render.com
-2. Click "New" → "Web Service"
-3. Connect your GitHub repository
-4. Render auto-deploys on every push
-```
-
-📖 See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for detailed guide
-
-### Option 3: Docker (Local/VPS)
-```bash
-# Clone and start with Docker
-git clone https://github.com/dennisnjonjo07-commits/code-runner-platform.git
-cd code-runner-platform
-chmod +x docker-run.sh
-./docker-run.sh
-
-# Access at http://localhost:5000
-```
-
-📖 See [DEPLOYMENT.md](./DEPLOYMENT.md) for all options
-
----
-
-## 📋 Prerequisites (for Local Development)
-
-- Node.js 18+
-- npm or yarn
-- Docker & Docker Compose (optional, for containerized deployment)
-- Python 3, Java, Ruby, Rust (optional, only if running locally)
-
-## 🛠️ Local Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/dennisnjonjo07-commits/code-runner-platform.git
-cd code-runner-platform
-```
-
-2. Install dependencies:
-```bash
+git clone <repo>
+cd code-hosting-platform
 npm install
-```
-
-3. Create a `.env` file:
-```bash
-cp .env.example .env
-```
-
-4. Update `.env` with your configuration
-
-5. Start the server:
-```bash
-npm start
-```
-
-For development with auto-reload:
-```bash
 npm run dev
 ```
 
-6. Open your browser and navigate to `http://localhost:5000`
+Visit `http://localhost:5000`
+
+### Deploy to Railway (Recommended)
+
+**Easy 3-step setup:**
+
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   ```
+
+2. **Connect Railway**
+   - Go to [railway.app](https://railway.app)
+   - Click "New Project"
+   - Select "GitHub Repo"
+   - Choose your repository
+   - Select Dockerfile
+
+3. **Configure Domain**
+   - Railway generates a domain automatically
+   - Set `DOMAIN` environment variable:
+     ```
+     DOMAIN=your-domain.railway.app
+     ```
+
+**That's it! Your platform is live! 🎉**
+
+## 📖 Usage
+
+### Create a Project
+1. Click **"+ New Project"**
+2. Enter name and select language
+3. Optional: Paste code or use template
+4. Click **"Create"**
+
+### Upload Files
+1. Select a project
+2. Click **"📤 Upload Files"**
+3. Select files from computer
+4. Files are instantly added
+
+### Deploy Live
+1. Click **"🚀 Deploy Now"**
+2. Get live URL instantly
+3. Share with anyone!
+4. Your app runs 24/7
+
+### Edit & Update
+1. Edit code in browser
+2. Click **"💾 Save"**
+3. Re-deploy for changes
+4. Live updates appear immediately
+
+## 🔧 API Reference
+
+### Projects
+```bash
+# Create project
+POST /api/projects/create
+{
+  "name": "My App",
+  "language": "javascript",
+  "code": "optional code"
+}
+
+# List projects
+GET /api/projects
+
+# Get project
+GET /api/projects/:projectId
+
+# Upload file
+POST /api/projects/upload
+FormData: {file, projectId}
+
+# Get files
+GET /api/projects/:projectId/files
+
+# Get file content
+GET /api/projects/:projectId/file/:filename
+
+# Save file
+POST /api/projects/:projectId/file/:filename
+{"content": "..."}
+```
+
+### Deployment
+```bash
+# Deploy project
+POST /api/projects/:projectId/deploy
+
+# Get deployment status
+GET /api/deployments/:deploymentId/status
+
+# Stop deployment
+POST /api/deployments/:deploymentId/stop
+
+# List all deployments
+GET /api/deployments
+```
+
+## 🌐 How Hosting Works
+
+### Subdomain Routing
+When you deploy a project with ID `myapp`:
+
+```
+Your Domain: myplatform.railway.app
+                    ↓
+        Subdomain: myapp.myplatform.railway.app
+                    ↓
+        Routed to: localhost:3XXX (allocated port)
+                    ↓
+        Your deployed app responds
+```
+
+### Auto Port Allocation
+- Each deployment gets unique port
+- Reverse proxy handles routing
+- Multiple apps run simultaneously
+- No port conflicts
+
+### 24/7 Uptime
+- Apps run as background processes
+- Survive server restarts
+- Auto-restart on crash (Railway)
+- Logs captured in real-time
 
 ## 📁 Project Structure
 
 ```
-code-runner-platform/
-├── backend/
-│   ├── server.js           # Express server entry point
-│   ├── routes/
-│   │   ├── auth.js         # Authentication routes
-│   │   ├── projects.js     # Project CRUD routes
-│   │   ├── execution.js    # Code execution routes
-│   │   └── upload.js       # File upload routes
-│   └── ...
-├── frontend/
-│   ├── index.html          # Main HTML file
-│   ├── css/
-│   │   └── styles.css      # All styles (full-screen, smooth animations)
-│   └── js/
-│       ├── app.js          # Main app logic
-│       ├── auth.js         # Authentication logic
-│       ├── editor.js       # Code editor logic
-│       ├── execution.js    # Execution handler
-│       └── api.js          # API client
-├── Dockerfile              # Container definition
-├── docker-compose.yml      # Docker services
+.
+├── server.js                # Main Express + WebSocket server
+├── public/
+│   ├── index.html          # Dashboard UI
+│   ├── app.js              # Frontend application
+│   └── styles.css          # Dashboard styling
+├── projects/               # User projects storage
+│   └── {projectId}/
+│       ├── main.{ext}      # Main file
+│       ├── metadata.json   # Project metadata
+│       └── *.{files}       # Other project files
+├── deployments/            # Deployed app copies
+│   └── {deploymentId}/
+│       └── {project copy}
+├── uploads/                # Temp upload storage
 ├── package.json
-├── deploy.sh               # Production deployment script
-├── ecosystem.config.js     # PM2 configuration
-├── .env.example
-├── .gitignore
-├── DEPLOYMENT.md           # Deployment guides
-├── RAILWAY_DEPLOYMENT.md   # Railway specific guide
+├── Dockerfile
+├── railway.json
 └── README.md
 ```
 
-## 🔐 Authentication
-
-- Register a new account
-- Secure login with JWT tokens
-- Session management
-- Logout functionality
-- Password hashing with bcrypt
-
-## 💻 Supported Languages
-
-| Language | File Extension | Status |
-|----------|---|---|
-| Python | .py | ✅ |
-| JavaScript (Node.js) | .js | ✅ |
-| Java | .java | ✅ |
-| Ruby | .rb | ✅ |
-| Rust | .rs | ✅ |
-| HTML/CSS | .html, .css | ✅ |
-
-## 🎯 Usage
-
-### Create a New Project
-1. Click "New Project" from the sidebar
-2. Enter project name and select language
-3. Choose input method:
-   - **Upload File**: Upload a single code file
-   - **Upload ZIP**: Extract and run zipped projects
-   - **Code Editor**: Paste code directly
-4. Click "Run Code" to execute
-
-### View Execution Logs
-- Real-time logs appear in the terminal panel
-- See both stdout and stderr output
-- View errors immediately
-- Check execution status and duration
-
-### Manage Projects
-- View all projects in "My Projects"
-- Click any project to edit and re-run
-- Save projects for later use
-
-## 🔌 WebSocket Events
-
-### Client Events
-- `subscribe_logs`: Subscribe to execution logs
-- `run_code`: Execute code
-
-### Server Events
-- `log`: Real-time log message
-- `execution_update`: Execution status update
-- `error`: Execution error
-
-## 📊 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Create new account
-- `POST /api/auth/login` - Login
-- `POST /api/auth/verify` - Verify token
-- `POST /api/auth/logout` - Logout
-
-### Projects
-- `GET /api/projects` - List all projects
-- `POST /api/projects` - Create project
-- `GET /api/projects/:id` - Get project details
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
-
-### Execution
-- `POST /api/execution/run` - Run code
-- `GET /api/execution/:id` - Get execution status
-- `POST /api/execution/:id/stop` - Stop execution
-
-### Upload
-- `POST /api/upload/file` - Upload single file
-- `POST /api/upload/zip` - Upload and extract ZIP
-
-## ⚙️ Configuration
-
-Edit `.env` file:
+## 🔐 Environment Variables
 
 ```env
-PORT=5000
-NODE_ENV=development
-JWT_SECRET=your_secret_key
-EXEC_TIMEOUT=60000  # Execution timeout in milliseconds
-MAX_MEMORY=512m     # Maximum memory per execution
-CORS_ORIGIN=http://localhost:3000
+PORT=5000                      # Server port
+NODE_ENV=production            # Environment
+DOMAIN=your-domain.app         # Public domain for subdomains
 ```
 
-## 🎨 UI Features
+## 🚂 Railway Deployment
 
-- **Full-Screen Design**: No split screens, maximized workspace
-- **Smooth Animations**: CSS transitions for lag-free navigation
-- **Dark Theme**: Eye-friendly interface
-- **Responsive Layout**: Works on desktop and tablet
-- **Real-Time Feedback**: Instant execution feedback
-- **Intuitive Navigation**: Easy-to-use sidebar menu
-- **Zero Lag**: Optimized performance
+### Deploy with Railway CLI
 
-## 🔒 Security Features
+```bash
+# Install Railway CLI
+curl -fsSL https://railway.app/install.sh | bash
 
-- JWT token-based authentication
-- Bcrypt password hashing
-- Input validation
-- CORS protection
-- Helmet.js for security headers
-- Execution isolation
-- Timeout protection (60 seconds max)
-- Rate limiting ready
+# Login
+railway login
 
-## 📈 Performance
+# Link project
+railway link
 
-- Optimized database queries
-- Efficient file handling
-- Real-time WebSocket communication
-- Asynchronous code execution
-- Memory-limited execution environments
-- Cluster mode support (PM2)
+# Deploy
+railway up
+```
 
-## 🐛 Troubleshooting
+### Monitor Deployment
+```bash
+# View logs
+railway logs
 
-### Code doesn't execute
-- Ensure required language runtime is installed
-- Check execution logs for errors
-- Verify syntax is correct
-- Check timeout settings
+# Check status
+railway status
 
-### WebSocket connection fails
-- Check if server is running
-- Verify CORS settings
-- Check browser console for errors
-- Review firewall settings
+# View variables
+railway variables
+```
 
-### File upload fails
-- Check file size (max 50MB)
-- Ensure file format is supported
-- Verify disk space
-- Check upload directory permissions
+## 🔮 Future Enhancements
 
-### Deployment issues
-- See [DEPLOYMENT.md](./DEPLOYMENT.md)
-- Check platform-specific guides (Railway/Render)
-- Review server logs
-
-## 📖 Documentation
-
-- [Deployment Guide](./DEPLOYMENT.md) - All deployment options
-- [Railway Deployment](./RAILWAY_DEPLOYMENT.md) - Railway specific
-- [Render Deployment](./RENDER_DEPLOYMENT.md) - Render specific
-- [Docker Guide](./docker-compose.yml) - Local Docker setup
-
-## 📝 License
-
-MIT License - See LICENSE file
-
-## 👨‍💻 Author
-
-dennisnjonjo07-commits
+- [ ] User authentication & accounts
+- [ ] Database integration (PostgreSQL)
+- [ ] Environment variables per project
+- [ ] Build scripts (npm, pip)
+- [ ] Custom domains for apps
+- [ ] Collaborative editing
+- [ ] Git integration (GitHub sync)
+- [ ] Docker support for projects
+- [ ] Scheduled tasks & cron
+- [ ] Monitoring & analytics
+- [ ] API keys for automation
+- [ ] Team/organization support
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions welcome! Feel free to:
+- Report issues
+- Suggest features
+- Submit pull requests
+- Improve documentation
 
-## 📞 Support
+## 📄 License
 
-For issues and questions, please create an issue on GitHub.
+MIT License - Build amazing things!
+
+## 🆘 Support
+
+- **Issues**: GitHub Issues
+- **Questions**: GitHub Discussions
+- **Railway Support**: [railway.app](https://railway.app)
 
 ---
 
-## ⚡ Quick Start Summary
+**Built with ❤️ for makers, creators, and developers**
 
-**For Production (Railway/Render):**
-1. Push code to GitHub ✅
-2. Go to Railway.app or Render.com
-3. Connect your repo
-4. Done! Your app is live
-
-**For Local Development:**
-```bash
-git clone <repo>
-npm install
-npm start
-# Visit http://localhost:5000
-```
-
-**With Docker:**
-```bash
-./docker-run.sh
-# Visit http://localhost:5000
-```
-
-Enjoy coding! 🚀
+Transform your ideas into live applications instantly! 🚀
