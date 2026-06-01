@@ -5,7 +5,7 @@ WORKDIR /app
 # Install system dependencies for code execution
 RUN apk update && apk add --no-cache \
     python3 \
-    python3-pip \
+    py3-pip \
     openjdk11-jre \
     ruby \
     rust \
