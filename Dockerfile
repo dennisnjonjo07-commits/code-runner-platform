@@ -5,10 +5,10 @@ WORKDIR /app
 # Install system dependencies for code execution
 RUN apk add --no-cache \
     python3 \
-    python3-pip \
+    py3-pip \
     openjdk11 \
     ruby \
-    rustc \
+    rust \
     cargo \
     bash \
     curl
