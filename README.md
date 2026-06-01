@@ -12,17 +12,55 @@
 - **Background Execution**: Projects run 24/7 even after logout
 - **Full-Screen UI**: Smooth, responsive interface with zero lag
 - **Project Management**: Create, save, and manage your code projects
+- **Docker Support**: Easy deployment with Docker
+- **Cloud Ready**: Deploy to Railway or Render with one click
 
-## 📋 Prerequisites
+## 🚀 Quick Deploy (Recommended)
 
-- Node.js 14+
+### Option 1: Deploy to Railway (Easiest) ⭐
+```bash
+1. Go to https://railway.app
+2. Click "New Project" → "Deploy from GitHub"
+3. Select this repository
+4. Railway auto-detects and deploys!
+5. Your app is live in 2 minutes
+```
+
+📖 See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) for detailed guide
+
+### Option 2: Deploy to Render
+```bash
+1. Go to https://render.com
+2. Click "New" → "Web Service"
+3. Connect your GitHub repository
+4. Render auto-deploys on every push
+```
+
+📖 See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for detailed guide
+
+### Option 3: Docker (Local/VPS)
+```bash
+# Clone and start with Docker
+git clone https://github.com/dennisnjonjo07-commits/code-runner-platform.git
+cd code-runner-platform
+chmod +x docker-run.sh
+./docker-run.sh
+
+# Access at http://localhost:5000
+```
+
+📖 See [DEPLOYMENT.md](./DEPLOYMENT.md) for all options
+
+---
+
+## 📋 Prerequisites (for Local Development)
+
+- Node.js 18+
 - npm or yarn
-- Python 3 (for Python execution)
-- Java (for Java execution)
-- Ruby (for Ruby execution)
-- Rust (for Rust execution)
+- Docker & Docker Compose (optional, for containerized deployment)
+- Python 3, Java, Ruby, Rust (optional, only if running locally)
 
-## 🛠️ Installation
+## 🛠️ Local Installation
 
 1. Clone the repository:
 ```bash
@@ -35,7 +73,7 @@ cd code-runner-platform
 npm install
 ```
 
-3. Create a `.env` file based on `.env.example`:
+3. Create a `.env` file:
 ```bash
 cp .env.example .env
 ```
@@ -76,9 +114,15 @@ code-runner-platform/
 │       ├── editor.js       # Code editor logic
 │       ├── execution.js    # Execution handler
 │       └── api.js          # API client
+├── Dockerfile              # Container definition
+├── docker-compose.yml      # Docker services
 ├── package.json
+├── deploy.sh               # Production deployment script
+├── ecosystem.config.js     # PM2 configuration
 ├── .env.example
 ├── .gitignore
+├── DEPLOYMENT.md           # Deployment guides
+├── RAILWAY_DEPLOYMENT.md   # Railway specific guide
 └── README.md
 ```
 
@@ -88,6 +132,7 @@ code-runner-platform/
 - Secure login with JWT tokens
 - Session management
 - Logout functionality
+- Password hashing with bcrypt
 
 ## 💻 Supported Languages
 
@@ -100,7 +145,7 @@ code-runner-platform/
 | Rust | .rs | ✅ |
 | HTML/CSS | .html, .css | ✅ |
 
-## 🚀 Usage
+## 🎯 Usage
 
 ### Create a New Project
 1. Click "New Project" from the sidebar
@@ -175,9 +220,10 @@ CORS_ORIGIN=http://localhost:3000
 - **Full-Screen Design**: No split screens, maximized workspace
 - **Smooth Animations**: CSS transitions for lag-free navigation
 - **Dark Theme**: Eye-friendly interface
-- **Responsive Layout**: Works on desktop (mobile coming soon)
+- **Responsive Layout**: Works on desktop and tablet
 - **Real-Time Feedback**: Instant execution feedback
 - **Intuitive Navigation**: Easy-to-use sidebar menu
+- **Zero Lag**: Optimized performance
 
 ## 🔒 Security Features
 
@@ -188,6 +234,7 @@ CORS_ORIGIN=http://localhost:3000
 - Helmet.js for security headers
 - Execution isolation
 - Timeout protection (60 seconds max)
+- Rate limiting ready
 
 ## 📈 Performance
 
@@ -196,6 +243,7 @@ CORS_ORIGIN=http://localhost:3000
 - Real-time WebSocket communication
 - Asynchronous code execution
 - Memory-limited execution environments
+- Cluster mode support (PM2)
 
 ## 🐛 Troubleshooting
 
@@ -203,16 +251,31 @@ CORS_ORIGIN=http://localhost:3000
 - Ensure required language runtime is installed
 - Check execution logs for errors
 - Verify syntax is correct
+- Check timeout settings
 
 ### WebSocket connection fails
 - Check if server is running
 - Verify CORS settings
 - Check browser console for errors
+- Review firewall settings
 
 ### File upload fails
 - Check file size (max 50MB)
 - Ensure file format is supported
 - Verify disk space
+- Check upload directory permissions
+
+### Deployment issues
+- See [DEPLOYMENT.md](./DEPLOYMENT.md)
+- Check platform-specific guides (Railway/Render)
+- Review server logs
+
+## 📖 Documentation
+
+- [Deployment Guide](./DEPLOYMENT.md) - All deployment options
+- [Railway Deployment](./RAILWAY_DEPLOYMENT.md) - Railway specific
+- [Render Deployment](./RENDER_DEPLOYMENT.md) - Render specific
+- [Docker Guide](./docker-compose.yml) - Local Docker setup
 
 ## 📝 License
 
@@ -229,3 +292,29 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 For issues and questions, please create an issue on GitHub.
+
+---
+
+## ⚡ Quick Start Summary
+
+**For Production (Railway/Render):**
+1. Push code to GitHub ✅
+2. Go to Railway.app or Render.com
+3. Connect your repo
+4. Done! Your app is live
+
+**For Local Development:**
+```bash
+git clone <repo>
+npm install
+npm start
+# Visit http://localhost:5000
+```
+
+**With Docker:**
+```bash
+./docker-run.sh
+# Visit http://localhost:5000
+```
+
+Enjoy coding! 🚀
