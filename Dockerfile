@@ -3,12 +3,12 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install system dependencies for code execution
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
     python3 \
     python3-pip \
-    openjdk11 \
+    openjdk11-jre \
     ruby \
-    rustc \
+    rust \
     cargo \
     bash \
     curl
