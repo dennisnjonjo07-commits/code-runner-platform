@@ -1,146 +1,102 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const bcryptjs = require('bcryptjs');
+const { body, validationResult } = require('express-validator');
 
-// Mock database - replace with MongoDB
-const users = new Map();
-const sessions = new Map();
+// Mock users database (replace with MongoDB in production)
+let users = [];
 
-// Register
-router.post('/register', async (req, res) => {
-  try {
-    const { username, email, password, confirmPassword } = req.body;
-
-    if (!username || !email || !password) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({ error: 'Passwords do not match' });
-    }
-
-    if (password.length < 8) {
-      return res.status(400).json({ error: 'Password must be at least 8 characters' });
-    }
-
-    // Check if user exists
-    for (let user of users.values()) {
-      if (user.email === email || user.username === username) {
-        return res.status(409).json({ error: 'User already exists' });
-      }
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 10);
-
-    const userId = uuidv4();
-    const user = {
-      id: userId,
-      username,
-      email,
-      password: hashedPassword,
-      createdAt: new Date(),
-      projects: []
-    };
-
-    users.set(userId, user);
-
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: { id: user.id, username: user.username, email: user.email }
-    });
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Registration failed' });
+// Register endpoint
+router.post('/register', [
+  body('email').isEmail(),
+  body('password').isLength({ min: 6 }),
+  body('username').isLength({ min: 3 })
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
+
+  const { email, password, username } = req.body;
+
+  // Check if user exists
+  if (users.find(u => u.email === email)) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+
+  // Hash password
+  const hashedPassword = bcryptjs.hashSync(password, 10);
+
+  // Create user
+  const user = {
+    id: Date.now().toString(),
+    email,
+    username,
+    password: hashedPassword
+  };
+
+  users.push(user);
+
+  res.status(201).json({ message: 'User registered successfully', userId: user.id });
 });
 
-// Login
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' });
-    }
-
-    let user = null;
-    for (let u of users.values()) {
-      if (u.email === email) {
-        user = u;
-        break;
-      }
-    }
-
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const passwordValid = await bcrypt.compare(password, user.password);
-    if (!passwordValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'secret',
-      { expiresIn: process.env.JWT_EXPIRE || '7d' }
-    );
-
-    sessions.set(token, {
-      userId: user.id,
-      createdAt: new Date()
-    });
-
-    res.json({
-      message: 'Login successful',
-      token,
-      user: { id: user.id, username: user.username, email: user.email }
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed' });
+// Login endpoint
+router.post('/login', [
+  body('email').isEmail(),
+  body('password').exists()
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
+
+  const { email, password } = req.body;
+
+  // Find user
+  const user = users.find(u => u.email === email);
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+
+  // Check password
+  if (!bcryptjs.compareSync(password, user.password)) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+
+  // Generate token
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.JWT_SECRET || 'your-secret-key',
+    { expiresIn: '24h' }
+  );
+
+  res.json({
+    message: 'Login successful',
+    token,
+    user: { id: user.id, email: user.email, username: user.username }
+  });
 });
 
-// Verify token
+// Verify token endpoint
 router.post('/verify', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    const user = users.get(decoded.userId);
-
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
-
-    res.json({
-      valid: true,
-      user: { id: user.id, username: user.username, email: user.email }
-    });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    res.json({ valid: true, userId: decoded.userId });
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ valid: false, message: 'Invalid token' });
   }
 });
 
-// Logout
+// Logout endpoint
 router.post('/logout', (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (token) {
-      sessions.delete(token);
-    }
-    res.json({ message: 'Logged out successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Logout failed' });
-  }
+  res.json({ message: 'Logout successful' });
 });
 
 module.exports = router;

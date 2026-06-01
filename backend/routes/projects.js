@@ -1,98 +1,63 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
-const projects = new Map();
+// Mock projects database
+let projects = [];
 
-// Get all projects for user
+// Get all projects
 router.get('/', (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const userProjects = Array.from(projects.values()).filter(p => p.token === token);
-    res.json(userProjects);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch projects' });
-  }
+  res.json({ projects });
 });
 
 // Create project
 router.post('/', (req, res) => {
-  try {
-    const { name, description, language } = req.body;
-    const token = req.headers.authorization?.split(' ')[1];
+  const { name, language, code } = req.body;
 
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+  const project = {
+    id: Date.now().toString(),
+    name,
+    language,
+    code,
+    createdAt: new Date()
+  };
 
-    if (!name || !language) {
-      return res.status(400).json({ error: 'Name and language required' });
-    }
-
-    const projectId = uuidv4();
-    const project = {
-      id: projectId,
-      name,
-      description: description || '',
-      language,
-      token,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: 'stopped',
-      executions: []
-    };
-
-    projects.set(projectId, project);
-    res.status(201).json(project);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create project' });
-  }
+  projects.push(project);
+  res.status(201).json({ message: 'Project created', project });
 });
 
-// Get single project
+// Get project by ID
 router.get('/:id', (req, res) => {
-  try {
-    const project = projects.get(req.params.id);
-    if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
-    }
-    res.json(project);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch project' });
+  const project = projects.find(p => p.id === req.params.id);
+
+  if (!project) {
+    return res.status(404).json({ message: 'Project not found' });
   }
+
+  res.json({ project });
 });
 
 // Update project
 router.put('/:id', (req, res) => {
-  try {
-    const project = projects.get(req.params.id);
-    if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
-    }
+  const project = projects.find(p => p.id === req.params.id);
 
-    Object.assign(project, req.body, { updatedAt: new Date() });
-    projects.set(req.params.id, project);
-    res.json(project);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update project' });
+  if (!project) {
+    return res.status(404).json({ message: 'Project not found' });
   }
+
+  Object.assign(project, req.body);
+  res.json({ message: 'Project updated', project });
 });
 
 // Delete project
 router.delete('/:id', (req, res) => {
-  try {
-    const deleted = projects.delete(req.params.id);
-    if (!deleted) {
-      return res.status(404).json({ error: 'Project not found' });
-    }
-    res.json({ message: 'Project deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete project' });
+  const index = projects.findIndex(p => p.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Project not found' });
   }
+
+  projects.splice(index, 1);
+  res.json({ message: 'Project deleted' });
 });
 
 module.exports = router;

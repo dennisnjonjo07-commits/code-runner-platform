@@ -1,85 +1,154 @@
+// Connect to WebSocket
+const socket = io();
+
 // Navigation
 const navItems = document.querySelectorAll('.nav-item');
-const views = document.querySelectorAll('.view');
-
 navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        const viewName = item.dataset.view;
-        switchView(viewName);
-    });
+  item.addEventListener('click', () => {
+    const page = item.getAttribute('data-page');
+    if (page === 'logout') {
+      handleLogout();
+    } else {
+      navigateToPage(page);
+    }
+  });
 });
 
-function switchView(viewName) {
-    // Update nav items
-    navItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.view === viewName);
-    });
+function navigateToPage(pageName) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.remove('active');
+  });
 
-    // Update views
-    views.forEach(view => {
-        view.classList.toggle('active', view.id === `${viewName}View`);
-    });
+  // Show selected page
+  const pageElement = document.getElementById(pageName + '-page');
+  if (pageElement) {
+    pageElement.classList.add('active');
+  }
+
+  // Update active nav item
+  navItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('data-page') === pageName) {
+      item.classList.add('active');
+    }
+  });
 }
 
-// New Project button
-document.querySelector('.btn-new-project').addEventListener('click', () => {
-    switchView('editor');
-});
-
-// Terminal panel
-const terminalPanel = document.getElementById('terminalPanel');
-const closeTerminalBtn = document.querySelector('.btn-close-terminal');
-
-closeTerminalBtn.addEventListener('click', () => {
-    terminalPanel.classList.add('hidden');
-});
-
-// Load projects on startup
-function loadProjects() {
-    api.getProjects()
-        .then(projects => {
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = '';
-
-            if (projects.length === 0) {
-                projectsList.innerHTML = `
-                    <div class="no-projects">
-                        <i class="fas fa-folder-open"></i>
-                        <p>No projects yet. Create one to get started!</p>
-                    </div>
-                `;
-            } else {
-                projects.forEach(project => {
-                    const card = document.createElement('div');
-                    card.className = 'project-card';
-                    card.innerHTML = `
-                        <h3>${project.name}</h3>
-                        <p>${project.description || 'No description'}</p>
-                        <small>${project.language} • ${new Date(project.createdAt).toLocaleDateString()}</small>
-                    `;
-                    card.addEventListener('click', () => {
-                        document.getElementById('projectName').value = project.name;
-                        document.getElementById('languageSelect').value = project.language;
-                        switchView('editor');
-                    });
-                    projectsList.appendChild(card);
-                });
-            }
-
-            document.getElementById('projectsCount').textContent = projects.length;
+// Login form handler
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const [emailInput, passwordInput] = loginForm.querySelectorAll('input');
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput.value,
+          password: passwordInput.value
         })
-        .catch(error => {
-            console.error('Failed to load projects:', error);
-        });
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        navigateToPage('dashboard');
+        document.querySelector('.sidebar').style.display = 'flex';
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed');
+    }
+  });
 }
 
-// Update stats
-function updateStats() {
-    loadProjects();
-    // Executions count would come from backend
+// Register form handler
+const registerForm = document.getElementById('register-form');
+if (registerForm) {
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const [usernameInput, emailInput, passwordInput] = registerForm.querySelectorAll('input');
+    
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: usernameInput.value,
+          email: emailInput.value,
+          password: passwordInput.value
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('Account created! Please login.');
+        switchToLogin();
+      } else {
+        alert(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Register error:', error);
+      alert('Registration failed');
+    }
+  });
 }
 
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    updateStats();
+function switchToLogin() {
+  document.getElementById('login-page').classList.add('active');
+  document.getElementById('register-page').classList.remove('active');
+}
+
+function switchToRegister() {
+  document.getElementById('register-page').classList.add('active');
+  document.getElementById('login-page').classList.remove('active');
+}
+
+function handleLogout() {
+  localStorage.removeItem('token');
+  document.querySelector('.sidebar').style.display = 'none';
+  switchToLogin();
+}
+
+// Check if user is logged in
+window.addEventListener('load', () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    document.querySelector('.sidebar').style.display = 'flex';
+    navigateToPage('dashboard');
+  } else {
+    document.querySelector('.sidebar').style.display = 'none';
+    switchToLogin();
+  }
 });
+
+// Socket.io events
+socket.on('connect', () => {
+  console.log('Connected to server');
+  addLog('Connected to CodeRunner server ✓');
+});
+
+socket.on('log', (message) => {
+  addLog(message);
+});
+
+socket.on('error', (error) => {
+  addLog(`Error: ${error}`);
+});
+
+function addLog(message) {
+  const terminal = document.getElementById('terminal');
+  if (terminal) {
+    const logLine = document.createElement('div');
+    logLine.textContent = message;
+    terminal.appendChild(logLine);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+}
+
+console.log('CodeRunner app initialized');
