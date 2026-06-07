@@ -1,0 +1,9 @@
+[build]
+builder = "dockerfile"
+include = ["Dockerfile", "package.json", "package-lock.json", "public/**", "server.js"]
+
+[deploy]
+startCommand = "npm start"
+restart = "always"
+restartLimit = 5
+restartWindow = 300

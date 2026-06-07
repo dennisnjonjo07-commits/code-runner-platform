@@ -1,210 +1,110 @@
-# Deployment Instructions
+# 🚀 Deployment Guide - Railway
 
-## 🚀 Quick Start - 3 Options
+## Quick Deploy (3 Steps)
 
-Choose your preferred deployment platform:
-
-### Option 1: **Railway** ⭐ Recommended (Easiest)
-- **Cost**: $5/month free credit
-- **Setup Time**: 3 minutes
-- **Always On**: ✅ Yes
-- **Full Language Support**: ✅ Python, Node.js, Java, Ruby, Rust
-
-👉 See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md)
-
----
-
-### Option 2: **Render** (Also Great)
-- **Cost**: Free tier available (with 15 min sleep), Starter $7/month
-- **Setup Time**: 3 minutes  
-- **Always On**: ✅ Yes (on paid plans)
-- **Full Language Support**: ✅ Python, Node.js, Java, Ruby, Rust
-
-👉 See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md)
-
----
-
-### Option 3: **Docker Locally** (For Testing)
-- **Cost**: Free (use your machine)
-- **Setup Time**: 5 minutes
-- **For**: Development and testing
-
-👉 See instructions below
-
----
-
-## 🐳 Option 3: Run with Docker Locally
-
-### Prerequisites
-- Docker Desktop installed
-- Docker Compose installed
-
-### Quick Start
-
+### Step 1: Push to GitHub
 ```bash
-# Clone repository
-git clone https://github.com/dennisnjonjo07-commits/code-runner-platform.git
-cd code-runner-platform
-
-# Make scripts executable
-chmod +x docker-run.sh docker-stop.sh
-
-# Start the app
-./docker-run.sh
-
-# Access at http://localhost:5000
-
-# Stop the app
-./docker-stop.sh
+git add .
+git commit -m "Deploy to Railway"
+git push origin deploy-railway
 ```
 
-### Or use docker-compose directly
+### Step 2: Connect to Railway
+1. Go to [railway.app](https://railway.app)
+2. Click **"New Project"**
+3. Select **"Deploy from GitHub repo"**
+4. Select your repository: `dennisnjonjo13-alt/code-runner-platform`
+5. Select branch: `deploy-railway`
+6. Click **"Deploy"**
 
-```bash
-# Start
-docker-compose up -d
+### Step 3: Configure Environment
+1. Railway dashboard opens
+2. Click **"Variables"** tab
+3. Add these variables:
+   ```
+   PORT=5000
+   NODE_ENV=production
+   DOMAIN=your-project.railway.app
+   ```
+4. Click **"Deploy"** button
 
-# View logs
-docker-compose logs -f
+**Done! Your platform is live in ~5 minutes! 🎉**
 
-# Stop
-docker-compose down
+## 📍 Your Live URL
+
+After deployment, you'll get a URL like:
+```
+https://your-project.railway.app
 ```
 
----
+Access your platform dashboard from there!
 
-## 📋 Comparison Table
+## ✅ Verify Deployment
 
-| Feature | Railway | Render | Docker Local |
-|---------|---------|--------|---------------|
-| Setup Time | 3 min | 3 min | 5 min |
-| Cost | $5/mo credit | Free tier | Free (your machine) |
-| Always On | ✅ Yes | ⚠️ Paid only | Your choice |
-| Language Support | ✅ All | ✅ All | ✅ All |
-| Auto-Deploy | ✅ Yes | ✅ Yes | Manual |
-| Easy Deploy | ✅ Yes | ✅ Yes | ✅ Yes |
-| Best For | Production | Testing/Small | Local Dev |
+1. Visit your Railway URL
+2. You should see the Code Hosting Platform dashboard
+3. Create a test project
+4. Deploy it to get a live subdomain
 
----
+## 📊 Monitor Your App
 
-## 🎯 My Recommendation
+In Railway Dashboard:
+- **Logs** tab: See real-time output
+- **Metrics** tab: CPU, memory, bandwidth usage
+- **Deployments** tab: Deployment history
+- **Variables** tab: Environment variables
 
-### For Production (24/7):
-**→ Use Railway**
-- $5/month free credit covers most usage
-- Excellent uptime
-- Simple dashboard
-- Auto-deploy from GitHub
+## 💾 File Storage
 
-### For Testing/Learning:
-**→ Use Render Free Tier**
-- Free to try
-- Easy setup
-- Just accept occasional sleep
+Your projects are stored in:
+- `/projects/` - User project files
+- `/deployments/` - Running app copies
+- `/uploads/` - Temporary uploads
 
-### For Local Development:
-**→ Use Docker**
-- Test before deploying
-- Full control
-- No external dependencies
+⚠️ **Note**: Railway uses ephemeral storage (resets on restart). For production, add a PostgreSQL database.
 
----
-
-## 🔒 Environment Variables Setup
-
-You'll need to set these in your deployment platform:
-
-```env
-NODE_ENV=production
-PORT=5000
-JWT_SECRET=your_secret_key_here  # Generate: openssl rand -base64 32
-BCRYPT_ROUNDS=10
-```
-
-**How to generate JWT_SECRET:**
-```bash
-opensssl rand -base64 32
-```
-
----
-
-## 📊 Project Structure for Deployment
-
-```
-.
-├── Dockerfile           # Container definition
-├── docker-compose.yml   # Docker services
-├── package.json         # Node.js dependencies
-├── backend/
-│   ├── server.js        # Main app file
-│   └── routes/          # API routes
-├── frontend/            # Static files
-│   ├── index.html
-│   ├── css/
-│   └── js/
-└── uploads/             # User uploads (volume)
-```
-
----
-
-## 🚀 After Deployment
-
-1. **Test the platform**:
-   - Create an account
-   - Write and run code
-   - Test all languages
-
-2. **Monitor performance**:
-   - Check logs regularly
-   - Monitor CPU/Memory usage
-   - Track error rates
-
-3. **Update as needed**:
-   - Push changes to GitHub
-   - Auto-deploy will trigger
-   - Test changes immediately
-
----
-
-## 🆘 Troubleshooting
+## 🔧 Troubleshooting
 
 ### App won't start
-1. Check deployment logs
-2. Verify PORT environment variable
-3. Check package.json for dependencies
-4. Ensure Node.js version compatibility
+- Check logs in Railway dashboard
+- Verify all dependencies in package.json
+- Ensure PORT environment variable is set
 
-### WebSocket not working
-1. Verify WebSocket support enabled
-2. Check CORS_ORIGIN variable
-3. Review browser console errors
-4. Check firewall/proxy settings
+### Domain not working
+- DOMAIN variable must match your Railway URL
+- Format: `project-name.railway.app`
 
-### Code execution failing
-1. Check if language is installed on server
-2. Review execution logs
-3. Test with simple code first
-4. Check memory/timeout limits
+### Files disappearing after restart
+- Railway resets container storage on restart
+- Solution: Add PostgreSQL for persistent storage
+
+## 💰 Free Tier Usage
+
+**Your free $5/month includes:**
+- Node.js app: ~$0.10-0.50/day
+- Storage: ~$0.05/day per GB
+- Bandwidth: First 100GB free
+
+**Estimate:**
+- Small project: 5-10 days/month
+- Medium project: 2-5 days/month
+- Add payment for unlimited
+
+## 🆘 Need Help?
+
+- Railway Docs: https://docs.railway.app
+- Railway Community: https://railway.app/community
+- GitHub Issues: Open an issue in your repo
+
+## 🎯 Next Steps
+
+1. ✅ Deploy to Railway
+2. ✅ Create a test project
+3. ✅ Deploy a test app
+4. ✅ Share platform with users
+5. ✅ Monitor usage
+6. ✅ Upgrade if needed
 
 ---
 
-## 📚 Documentation Links
-
-- **Railway Docs**: https://docs.railway.app
-- **Render Docs**: https://render.com/docs
-- **Docker Docs**: https://docs.docker.com
-- **Node.js Docs**: https://nodejs.org/docs
-
----
-
-## ✅ Next Steps
-
-1. ✅ Choose deployment platform (Railway recommended)
-2. ✅ Follow the specific deployment guide
-3. ✅ Set up environment variables
-4. ✅ Deploy and test
-5. ✅ Share your live URL!
-
----
-
-**Happy Deploying! 🎉**
+**Your platform is production-ready! 🚀**
